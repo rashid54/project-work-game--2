@@ -534,14 +534,13 @@
 	<SFML/Audio/Export.hpp>
 	<string>
 
-1548126293 source:i:\swe\g2\jumping rabbit\version1.0\main.cpp
+1548139086 source:i:\swe\g2\jumping rabbit\version1.0\main.cpp
 	<SFML/Graphics.hpp>
 	<SFML/Audio.hpp>
 	<bits/stdc++.h>
 	<sys/stat.h>
 	"Collision.hpp"
 	"Collision.cpp"
-	"scorer.cpp"
 
 1511165892 i:\swe\g2\jumping rabbit\version1.0\collision.hpp
 
@@ -560,7 +559,7 @@
 	<SFML/Audio.hpp>
 	<bits/stdc++.h>
 
-1548127116 source:c:\users\lenovo_\desktop\project 2\main.cpp
+1548170464 source:i:\swe\g2\jumping rabbit\ready1\version1.0\main.cpp
 	<SFML/Graphics.hpp>
 	<SFML/Audio.hpp>
 	<bits/stdc++.h>
@@ -568,9 +567,9 @@
 	"Collision.hpp"
 	"Collision.cpp"
 
-1548127106 c:\users\lenovo_\desktop\project 2\collision.hpp
+1511165892 i:\swe\g2\jumping rabbit\ready1\version1.0\collision.hpp
 
-1548127108 c:\users\lenovo_\desktop\project 2\collision.cpp
+1511165892 i:\swe\g2\jumping rabbit\ready1\version1.0\collision.cpp
 	<SFML/Graphics.hpp>
 	<map>
 	"Collision.hpp"

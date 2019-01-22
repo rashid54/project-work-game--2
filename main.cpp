@@ -5,7 +5,6 @@
 #include <sys/stat.h>
 #include "Collision.hpp"
 #include "Collision.cpp"
-//#include "scorer.cpp"
 //**the sizes declarations ****
 #define window_width 1200
 #define window_length 900
@@ -20,10 +19,10 @@
 //*** the default values declarations****
 #define notSelectedColor sf::Color::Blue
 #define SIZE 10
-#define top_ground 550
+#define top_ground 540
 #define max_brick 200
 #define game_speed (1+(0.1*speed))
-#define ground brick[brick_count].y+65
+#define ground brick[brick_count].y+55
 using namespace sf;
 //***********structures***********
 struct coordinate{int x,y;};
@@ -32,168 +31,6 @@ inline bool file_exists (const std::string& name) {
   struct stat buffer;
   return (stat (name.c_str(), &buffer) == 0);
 }
-class Scorer
-{
-    int high[10],n;
-    std::string name[10],date[10];
-    Font font;
-    Text high_s,name_s,date_s;
-    void get_data()
-    {
-        std::freopen("save/score.dat","r",stdin);
-        for(n=0;std::scanf("%d",high[n])==1;n++)
-        {
-            std::cin>>name[n]>>date[n];
-        }
-        std::fclose(stdin);
-    }
-    std::string &enter_name()
-    {
-        sf::RenderWindow window(sf::VideoMode(700, 500), "SFML works!",sf::Style::None);
-        RectangleShape rect( Vector2f (500,70));
-        rect.setPosition(100,200);
-        rect.setFillColor(Color::Red);
-        rect.setOutlineThickness(2);
-        Font font;
-        font.loadFromFile("FORTE.ttf");
-        sf::Text text,speech1,speech2;
-        speech1.setCharacterSize(40);
-        speech1.setFont(font);
-        speech2.setCharacterSize(40);
-        speech2.setFont(font);
-        text.setCharacterSize(60);
-        text.setFont(font);
-        sf::String str;
-        text.setPosition(110,200);
-        speech1.setPosition(40,40);
-        speech2.setPosition(200,300);
-
-        speech2.setString("Maximum 10 letters");
-        speech1.setString("You have achieved the honor to enter\nyour name in the HALL OF FAME");
-        while (window.isOpen())
-        {
-            sf::Event event;
-            while (window.pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    window.close();
-                if (event.type == sf::Event::TextEntered)
-                {
-                    // Handle ASCII characters only
-                    if (event.text.unicode < 128)
-                    {
-                        str += static_cast<char>(event.text.unicode);
-                        text.setString(str);
-                    }
-                }
-                if((event.type==Event::KeyPressed&&Keyboard::isKeyPressed(Keyboard::Enter))||str.getSize()==10)
-                {
-                    std::string st;
-                    for(String ::Iterator i=str.begin();i!=str.end();i++)
-                        st=st+ (*i);
-                    return st;
-
-                }
-
-            }
-
-            window.clear(Color::Blue);
-            window.draw(rect);
-            window.draw(speech1);
-            window.draw(speech2);
-            window.draw(text);
-            window.display();
-        }
-    }
-
-
-public:
-    scorer()
-    {
-        font.loadFromFile("font/FORTE.ttf");
-        high_s.setFont(font);
-        name_s.setFont(font);
-        date_s.setFont(font);
-        high_s.setPosition(300,300);
-        name_s.setPosition(500,300);
-        date_s.setPosition(700,300);
-        high_s.setCharacterSize(2);
-        name_s.setCharacterSize(2);
-        date_s.setCharacterSize(2);
-        get_data();
-    }
-    void print_data(RenderWindow &window)
-    {
-        Texture texture;
-        texture.loadFromFile("pics/help.png");
-        Sprite menubg(texture);
-        Event e;
-        bool skip=false;
-        for(int i=0;i<n;i++)
-        {
-            while(window.pollEvent(e))
-            {
-                if(e.type == e.KeyPressed)
-                {
-                    skip=true;
-                }
-            }
-            char str[10];
-            sprintf(str,"%d",high[i]);
-            high_s.setString(str);
-            name_s.setString(name[i]);
-            date_s.setString(date[i]);
-            high_s.move(60,0);
-            name_s.move(60,0);
-            date_s.move(60,0);
-            if(skip==false)
-            {
-                high_s.move(0,-400);
-                name_s.move(0,-400);
-                date_s.move(0,-400);
-                for(int j=0;j<20;j++)
-                {
-                    high_s.move(0,20);
-                    name_s.move(0,20);
-                    date_s.move(0,20);
-                    window.draw(high_s);
-                    window.draw(name_s);
-                    window.draw(date_s);
-                    window.draw(menubg);
-                    window.display();
-                }
-            }
-            window.draw(high_s);
-            window.draw(name_s);
-            window.draw(date_s);
-            window.draw(menubg);
-            window.display();
-        }
-        high_s.setPosition(300,300);
-        name_s.setPosition(500,300);
-        date_s.setPosition(700,300);
-    }
-    void input_score(int score)
-    {
-        std::freopen("save/data.dat","w",stdout);
-        for(int i=0;i<n||i<10;i++)
-        {
-            if(score>high[i])
-            {
-                auto t = std::time(nullptr);
-                auto tm = *std::localtime(&t);
-                std::printf("%d %s %s\n",score,enter_name().c_str(),std::put_time(&tm, "%d-%m-%Y"));
-                continue;
-            }
-            std::printf("%d %s %s\n",high[i],name[i],date[i]);
-        }
-        get_data();
-    }
-    int &get_high()
-    {
-        return high[0];
-    }
-};
 
 class animation
 {
@@ -232,7 +69,6 @@ public:
 };
 class Game
 {
-    Scorer scorer;
     int brick_count,x , y ,speed,score,fuel,level,mapnum,highscore,level_score,jack,life;
     char text[10];
     Font values;
@@ -241,7 +77,7 @@ class Game
     coordinate cloud[20],brick[max_brick];
     IntRect bgsource;
     Texture bgimage_texture,cloud_texture, character_texture1,character_texture2,character_texture3,brick_texture;
-    Sprite sCloud, scharacter,sbrick,bg;
+    Sprite sCloud, scharacter,sbrick,bg,sbrick_top;
     Event event;
     animation sidewindow,life_ani;
 
@@ -259,24 +95,72 @@ class Game
     {
         if(i<2)        // level 1 brick creation
         {
-            brick[brick_count].x=(window_length*(brick_count%2))-brick_width;
+            brick[brick_count].x=(900*(brick_count%2))-brick_width;
         }
         else   // level 3 brick creation
         {
             srand(time(NULL));
-            brick[brick_count].x=(window_length*(rand()%2))-brick_width;
+            brick[brick_count].x=(910*(rand()%2))-brick_width-jack/12;
         }
         if(brick[brick_count].x*brick_velocity>0)       // fixing brick_velocity direction
         {
             brick_velocity*=-1;
         }
         brick[brick_count].y=brick[brick_count-1].y - brick_length;   // new brick height
+        sbrick_top.setPosition(brick[brick_count].x,brick[brick_count].y);
+    }
+    int map_changer(RenderWindow &gamewindow,char* arg)
+    {
+        Text map_change;
+        map_change.setFont(values);
+        map_change.setCharacterSize(50);
+        map_change.setString("NEW MAP UNLOCKED");
+        map_change.setPosition(-500,400);
+        for(int i=-65;i<65;i++)
+        {
+            scharacter.move(0,-5);
+            map_change.move(10,0);
+            gamewindow.draw(bg);
+            for(int i=brick_count-1;i>=0;i--)
+            {
+                sbrick.setPosition(brick[i].x,brick[i].y);
+                gamewindow.draw(sbrick);
+                if(brick[i].y>900) break;
+            }
+            gamewindow.draw(map_change);
+            gamewindow.draw(sbrick_top);
+                gamewindow.draw(scharacter);
+                gamewindow.draw(sidewindow.print());
+                gamewindow.draw(life_ani.print());
+                gamewindow.draw(score_text);
+                gamewindow.draw(highscore_text);
+                gamewindow.draw(level_text);
+                gamewindow.display();
+                gamewindow.clear(sf::Color::Cyan);
+            }
+            speed-=3;
+            bgimage_texture.loadFromFile(arg);
+            bg.setTexture(bgimage_texture);
+            y=100;
+            scharacter.setPosition(x,y);
+            brick_count=0;
+            brick_create(level);
+            for(int i=0;i<max_brick;i++)        /* brick initialization */
+            {
+                brick[i].x=-200;
+                brick[i].y=sf::VideoMode().getDesktopMode().height+200;
+            }
+            brick[0].y=800-40;
+            bgsource.top=1600;
+            bg.setTextureRect(bgsource);
+            character_velocity = 0,brick_velocity=(game_speed)*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
+            sbrick_top.setPosition(brick[0].x,brick[0].y);
     }
     void scroll();
 public:
     Game();
     bool DEAD;
-    bool game(sf::RenderWindow &gamewindow,int volume=3);
+    int game(sf::RenderWindow &gamewindow,int volume=3,int high=0);
     int gethigh()
     {
         int high;
@@ -316,7 +200,7 @@ class MENU
     Sound sound_change;
 
 
-    int cursor,screen_x,screen_y,sound_level;
+    int high,cursor,screen_x,screen_y,sound_level;
 public:
     MENU();
     int main_menu(RenderWindow &window);
@@ -372,7 +256,7 @@ int main()
     int screen_y=sf::VideoMode::getDesktopMode().height;
     sf::RenderWindow window(sf::VideoMode(window_width,window_length), "JUMPING RABBIT",sf::Style::None);
     window.setFramerateLimit(60);
-    if(window_width>screen_x)
+    if(window_width>(screen_x))
     {
         window.setSize(sf::Vector2u (screen_x,screen_y));
         window.setPosition(sf::Vector2i (0,0));
@@ -408,7 +292,6 @@ Game::Game()
     background_game_sound.setLoop(true);
     //loading texture and sprites
 
-    bgimage_texture.loadFromFile("pics/background1.png");
     cloud_texture.loadFromFile("pics/cloud1.png");
     sidewindow.load("pics/side window.png",4);
     Collision::CreateTextureAndBitmask(character_texture1,"pics/rabbit1.png");
@@ -418,6 +301,7 @@ Game::Game()
     sCloud.setTexture(cloud_texture);
     scharacter.setTexture(character_texture1);
     sbrick.setTexture(brick_texture);
+    sbrick_top.setTexture(brick_texture);
     bgsource.top=bg_length-900,bgsource.left=0,bgsource.width=700,bgsource.height=bg_length;
     bg.setTexture(bgimage_texture);
     bg.setTextureRect(bgsource);
@@ -449,31 +333,41 @@ Game::Game()
     level_text.setOutlineThickness(1);
     level_text.setFillColor(sf::Color::Green);
     level_text.setPosition(805,455);
-    highscore=scorer.get_high();
+    highscore=gethigh();
 }
- bool Game::game(sf::RenderWindow &gamewindow,int volume)
+ int Game::game(sf::RenderWindow &gamewindow,int volume,int high)
 {
     //***new game initialization start****
-    brick_count=0,x = 250, y = 100,speed=0,fuel=100,level=0,mapnum=0,highscore=scorer.get_high(),level_score=0,jack=0,life=3,score=0;
-    sprintf(text,"%d",level);
-    level_text.setString(text);
-    sprintf(text,"%d",highscore);
-    highscore_text.setString(text);
-    sprintf(text,"%d",score);
-    score_text.setString(text);
-    bgsource.top=bg_length-900;
-    bg.setTextureRect(bgsource);
-    life_ani.set_pic(2);
-
-    character_velocity = 0,brick_velocity=game_speed*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
-    DEAD=false;
-
-    for(int i=0;i<max_brick;i++)        /* brick initialization */
+    if(DEAD==true)
     {
-        brick[i].x=-200;
-        brick[i].y=sf::VideoMode().getDesktopMode().height+200;
+        bgimage_texture.loadFromFile("pics/background1.png");
+        bgsource.top=bg_length-900,bgsource.left=0,bgsource.width=700,bgsource.height=bg_length;
+        bg.setTexture(bgimage_texture);
+        bg.setTextureRect(bgsource);
+
+        brick_count=0,x = 250, y = 100,speed=4,fuel=100,level=1,mapnum=0,highscore=high,level_score=0,jack=0,life=3,score=0;
+        sprintf(text,"%d",level);
+        level_text.setString(text);
+        sprintf(text,"%d",highscore);
+        highscore_text.setString(text);
+        sprintf(text,"%d",score);
+        score_text.setString(text);
+        bgsource.top=bg_length-900;
+        bg.setTextureRect(bgsource);
+        life_ani.set_pic(2);
+
+        character_velocity = 0,brick_velocity=game_speed*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
+        DEAD=false;
+
+        for(int i=0;i<max_brick;i++)        /* brick initialization */
+        {
+            brick[i].x=-200;
+            brick[i].y=sf::VideoMode().getDesktopMode().height+200;
+        }
+        brick[0].y=800-40;
+        sbrick_top.setPosition(brick[0].x,brick[0].y);
+        background_game_sound.stop();
     }
-    brick[0].y=800-40;
 
     for(int i = 0; i < SIZE; i++)       /*cloud initialization*/
     {
@@ -499,7 +393,7 @@ Game::Game()
                     print_high(highscore);
                     back_sound.play();
                     background_game_sound.pause();
-                    return DEAD;
+                    return highscore;
                 }
             if(event.type==Event::MouseButtonPressed)       /* Unit testing: finding coordinates */
             {
@@ -524,7 +418,7 @@ Game::Game()
         sbrick.setPosition(brick[brick_count].x,brick[brick_count].y);
         scharacter.setPosition(x,y);
         //*****handling situation during collision*****
-        if(Collision::PixelPerfectTest(scharacter,sbrick))
+        if(Collision::PixelPerfectTest(scharacter,sbrick_top))
         {
             if((((brick[brick_count].y) + 15 )> (y + character_length))&&( 350 > brick[brick_count].x)&&( 350 < (brick[brick_count].x + brick_width)))
             {       //*****new brick is added******
@@ -546,24 +440,33 @@ Game::Game()
                     if(brick_count%10==0) {
                             level_up_sound.play();
                             level++;
-                            mapnum=(level/5);
                             sprintf(text,"%d",level);
                             level_text.setString(text);
                             jack=-80;
                             sidewindow.set_pic(2);
+                            if(level==8)
+                            {
+                                life++;
+                                life_ani.set_pic(5-life);
+                                map_changer(gamewindow,"pics/background2.png");
+                            }
+                            else if(level==15)
+                            {
+                                life++;
+                                life_ani.set_pic(5-life);
+                                map_changer(gamewindow,"pics/background3.png");
+                            }
                     }
                     if(level_score>35){
                             speed++;
                             level_score=0;
                             character_velocity = 0,brick_velocity=game_speed*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
                     }
-                    fuel+=5;
                     std::cout<<"score:"<<score<<" level:"<<level<<" speed:"<<speed<<" mapnum:"<<mapnum<<std::endl;
                 }
             }
             else{
-                //DEAD=true; //******When Dead*****
-                //return DEAD;
+                //when dead
                 dead_sound.play();
                 life--;
                 life_ani.set_pic(5-life);
@@ -573,7 +476,37 @@ Game::Game()
                 sidewindow.set_pic(3);
                 if(life==0)
                 {
+                    DEAD=true;
                     background_game_sound.stop();
+                    Text map_change;
+                    map_change.setFont(values);
+                    map_change.setCharacterSize(50);
+                    map_change.setString("YOU'RE DEAD!!");
+                    map_change.setPosition(-500,400);
+                    for(int i=-65;i<65;i++)
+                    {
+                        if(i==-30||i==30) dead_sound.play();
+                        scharacter.move(-2,-5);
+                        map_change.move(10,0);
+                        gamewindow.draw(bg);
+                        for(int i=brick_count-1;i>=0;i--)
+                        {
+                            sbrick.setPosition(brick[i].x,brick[i].y);
+                            gamewindow.draw(sbrick);
+                            if(brick[i].y>900) break;
+                        }
+                        gamewindow.draw(map_change);
+                        gamewindow.draw(sbrick_top);
+                            gamewindow.draw(scharacter);
+                            gamewindow.draw(sidewindow.print());
+                            gamewindow.draw(life_ani.print());
+                            gamewindow.draw(score_text);
+                            gamewindow.draw(highscore_text);
+                            gamewindow.draw(level_text);
+                            gamewindow.display();
+                            gamewindow.clear(sf::Color::Cyan);
+                        }
+                    return highscore;
                 }
             }
         }
@@ -583,11 +516,13 @@ Game::Game()
             character_velocity=0;                               // ****the character is stationary******
         else character_velocity += gravitation;             //***continuous gravitational accelaration *****
 
+        scharacter.move(0,character_velocity);
         y += character_velocity;
 
         //******brick movement*****
         if(brick[brick_count].x<-200||brick[brick_count].x>700)
             brick_create(level);
+        sbrick_top.move((int)brick_velocity,0);
         brick[brick_count].x+=(int)brick_velocity;
 
         //*********check if scrolling is needed**********
@@ -599,7 +534,6 @@ Game::Game()
         //std::cout<<ground<<std::endl<<y<<std::endl;
 
         //*****start of drawing*****
-        scharacter.setPosition(x, y);
 
         gamewindow.draw(bg);
 
@@ -611,12 +545,13 @@ Game::Game()
         */      // temporary disabled
 
         //draws all the bricks
-        for(int i=brick_count;i>=0;i--)
+        for(int i=brick_count-1;i>=0;i--)
         {
             sbrick.setPosition(brick[i].x,brick[i].y);
             gamewindow.draw(sbrick);
             if(brick[i].y>900) break;
         }
+        gamewindow.draw(sbrick_top);
         if(character_velocity==0) scharacter.setTexture(character_texture1);
         else if( character_velocity<0) scharacter.setTexture(character_texture2);
         else if(character_velocity>0) scharacter.setTexture(character_texture3);
@@ -637,7 +572,7 @@ Game::Game()
 }
 MENU::MENU()
     {
-        cursor=0;sound_level=get_sound();
+        cursor=0;sound_level=get_sound();high=gethigh();
 
         screen_x=sf::VideoMode::getDesktopMode().width;
         screen_y=sf::VideoMode::getDesktopMode().height;
@@ -695,6 +630,12 @@ MENU::MENU()
             options_text[i].setFillColor(notSelectedColor);
             options_text[i].setOutlineColor(notSelectedColor);
         }
+        menu_text[5].setFont(menuitems);
+        menu_text[5].setCharacterSize(60);
+        menu_text[5].setPosition(60,270);
+        menu_text[5].setFillColor(notSelectedColor);
+        menu_text[5].setOutlineColor(notSelectedColor);
+
         menu_text[0].setString("Play");
         menu_text[1].setString("Options");
         menu_text[2].setString("Highscore");
@@ -710,6 +651,8 @@ MENU::MENU()
 }
 int MENU::main_menu(RenderWindow &window)
 {
+    int menu_num=5;
+    game.DEAD=true;
     background_music.play();
 
     while (window.isOpen())
@@ -723,7 +666,7 @@ int MENU::main_menu(RenderWindow &window)
                 }
             else if(event.type==Event::KeyPressed)
             {
-                if(Keyboard::isKeyPressed(Keyboard::Tab)&&!(1200>screen_x))
+                if(Keyboard::isKeyPressed(Keyboard::Tab)&&!(window_width>screen_x-100))
                 {
                     if(window.getSize()!=Vector2u (screen_x,screen_y))
                     {
@@ -731,7 +674,7 @@ int MENU::main_menu(RenderWindow &window)
                         window.setPosition(sf::Vector2i (0,0));
                     }
                     else{
-                        window.setSize(sf::Vector2u (1200,900));
+                        window.setSize(sf::Vector2u (window_width,window_length));
                         window.setPosition(sf::Vector2i ((screen_x/2)-600,(screen_y/2)-450));
                     }
                 }
@@ -740,7 +683,7 @@ int MENU::main_menu(RenderWindow &window)
                     updown_sound.play();
                     menu_text[cursor].setFillColor(Color::Blue);
                     menu_text[cursor].setOutlineThickness(0);
-                    cursor=(cursor+1)%5;
+                    cursor=(cursor+1)%menu_num;
                     menu_text[cursor].setFillColor(Color::Cyan);
                     menu_text[cursor].setOutlineThickness(1);
                 }
@@ -749,7 +692,7 @@ int MENU::main_menu(RenderWindow &window)
                     updown_sound.play();
                     menu_text[cursor].setFillColor(Color::Blue);
                     menu_text[cursor].setOutlineThickness(0);
-                    cursor=(cursor+4)%5;
+                    cursor=(cursor+(menu_num-1))%menu_num;
                     menu_text[cursor].setFillColor(Color::Cyan);
                     menu_text[cursor].setOutlineThickness(1);
                 }
@@ -768,8 +711,11 @@ int MENU::main_menu(RenderWindow &window)
                     }
                     menu_text[cursor].setPosition(60,330+cursor*60);
                     if(cursor==0){
+                            game.DEAD=true;
                             background_music.stop();
-                            game.game(window,sound_level);
+                            high=game.game(window,sound_level,high);
+                            if(game.DEAD==false) menu_num=6;
+                            else menu_num=5;
                             background_music.play();
                     }
                     else if(cursor==1) option_menu(window);
@@ -779,6 +725,15 @@ int MENU::main_menu(RenderWindow &window)
                             exit_sound.play();
                             window.close();
                     }
+                    else if(cursor==5) {
+                        background_music.stop();
+                        high=game.game(window,sound_level,high);
+                        if(game.DEAD==false) menu_num=6;
+                        else menu_num=5;
+                        background_music.play();
+                        menu_text[5].setPosition(60,270);
+                    }
+
                 }
                 else
                 {
@@ -949,6 +904,7 @@ void Game::scroll()
     {
         brick[i].y+=3;
     }
+    sbrick_top.move(0,3);
     //std::cout<<brick[brick_count].y<<std::endl;
 
 }
@@ -962,10 +918,9 @@ void MENU::highscore_menu(RenderWindow &window)
 
     Text help_text;
     help_text.setFont(menuitems);
-    help_text.setPosition(200,400);
+    help_text.setPosition(-200,400);
+    help_text.setCharacterSize(40);
     char str[100];
-
-    int high=0;
     std::sprintf(str,"The current highscore is :%d",high);
     help_text.setString(str);
     while(true){
@@ -973,7 +928,7 @@ void MENU::highscore_menu(RenderWindow &window)
         {
             if(event.type==event.KeyPressed)
             {
-                if(Keyboard::isKeyPressed(Keyboard::Escape)||i==1)
+                if(Keyboard::isKeyPressed(Keyboard::Escape))
                 {
                     menubgtexture.loadFromFile("pics/menubg1.png");
                     menubg.setTexture(menubgtexture);
@@ -981,10 +936,27 @@ void MENU::highscore_menu(RenderWindow &window)
                 }
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    if(i==0) help_text.setString("Good Luck on getting the next highscore");
-                    i++;
+                    if(help_text.getPosition().x<200)
+                    {
+                        help_text.setPosition(200,400);
+                    }
+                    else{
+                        if(i==0) help_text.setString("           Good Luck \non getting the next highscore");
+                        else if(i==1){
+                            menubgtexture.loadFromFile("pics/menubg1.png");
+                            menubg.setTexture(menubgtexture);
+                            return ;
+                        }
+                        i++;
+                        help_text.setPosition(-200,400);
+                    }
                 }
             }
+        }
+
+        if(help_text.getPosition().x<200)
+        {
+            help_text.move(10,0);
         }
         window.clear();
         window.draw(menubg);
@@ -995,18 +967,15 @@ void MENU::highscore_menu(RenderWindow &window)
 void MENU::help_menu(RenderWindow &window)
 {
     int i=0;
-    Texture help_texture;
-    help_texture.loadFromFile("pics/help.png");
-    Sprite help_sprite;
-    help_sprite.setTexture(help_texture);
-    help_sprite.setPosition(0,0);
-
+    menubgtexture.loadFromFile("pics/help.png");
+    menubg.setTexture(menubgtexture);
 
     Text help_text;
     Font font;
     font.loadFromFile("fonts/FORTE.ttf");
     help_text.setFont(font);
-    help_text.setPosition(200,400);
+    help_text.setPosition(-200,400);
+    help_text.setCharacterSize(40);
     help_text.setString("Press UP and DOWN keys to navigate the menu\nUse ENTER to select the menu items to your choice");
     Event e;
     while(true){
@@ -1016,20 +985,37 @@ void MENU::help_menu(RenderWindow &window)
             {
                 if(Keyboard::isKeyPressed(Keyboard::Escape))
                 {
+                    menubgtexture.loadFromFile("pics/menubg1.png");
+                    menubg.setTexture(menubgtexture);
                     return ;
                 }
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    if(i==0) help_text.setString("Press SPACE to jump in game\n Try to land on the center-top the brick to score higher score");
-                    else if(i==1) help_text.setString("Be careful not to get knocked by the bricks");
-                    else if(i==2) help_text.setString("Happy Gaming");
-                    else if(i==3) return;
-                    i++;
+                    if(help_text.getPosition().x<200)
+                    {
+                        help_text.setPosition(200,400);
+                    }
+                    else{
+                        if(i==0) help_text.setString("          Press SPACE to jump in game\n Try to land on the center-top of the brick\n                to score higher score");
+                        else if(i==1) help_text.setString("Be careful not to get knocked by the bricks");
+                        else if(i==2) help_text.setString("                 Happy Gaming");
+                        else if(i==3) {
+                            menubgtexture.loadFromFile("pics/menubg1.png");
+                            menubg.setTexture(menubgtexture);
+                            return;
+                        }
+                        i++;
+                        help_text.setPosition(-200,400);
+                    }
                 }
             }
         }
+        if(help_text.getPosition().x<200)
+        {
+            help_text.move(10,0);
+        }
         window.clear();
-        window.draw(help_sprite);
+        window.draw(menubg);
         window.draw(help_text);
         window.display();
     }

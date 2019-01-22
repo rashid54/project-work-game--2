@@ -53,6 +53,7 @@
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Unit filename="openal32.dll" />
+		<Unit filename="scorer.cpp" />
 		<Unit filename="sfml-audio-2.dll" />
 		<Unit filename="sfml-audio-d-2.dll" />
 		<Unit filename="sfml-graphics-2.dll" />
