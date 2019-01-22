@@ -14,8 +14,6 @@
 #define character_length 300
 #define brick_width 200
 #define brick_length 50
-#define cloud_width 0
-#define cloud_length 0
 //*** the default values declarations****
 #define notSelectedColor sf::Color::Blue
 #define SIZE 10
@@ -70,14 +68,15 @@ public:
 class Game
 {
     int brick_count,x , y ,speed,score,fuel,level,mapnum,highscore,level_score,jack,life;
+    int jump;
     char text[10];
     Font values;
     Text score_text,highscore_text,level_text;
     float character_velocity ,brick_velocity,gravitation,jump_accelaration;
-    coordinate cloud[20],brick[max_brick];
+    coordinate brick[max_brick];
     IntRect bgsource;
-    Texture bgimage_texture,cloud_texture, character_texture1,character_texture2,character_texture3,brick_texture;
-    Sprite sCloud, scharacter,sbrick,bg,sbrick_top;
+    Texture bgimage_texture,character_texture1,character_texture2,character_texture3,brick_texture;
+    Sprite scharacter,sbrick,bg,sbrick_top;
     Event event;
     animation sidewindow,life_ani;
 
@@ -182,7 +181,7 @@ class MENU
     Game game;
     sf::Texture menubgtexture,sound_arrow_texture;
     sf::Sprite menubg,sound_arrow;
-    sf::Font gamename,menuitems,style1;
+    sf::Font gamename,menuitems;
     sf::Text gamename_text,menu_text[6],options_text[5];
     sf::Event event;
     animation sound;
@@ -292,13 +291,12 @@ Game::Game()
     background_game_sound.setLoop(true);
     //loading texture and sprites
 
-    cloud_texture.loadFromFile("pics/cloud1.png");
+
     sidewindow.load("pics/side window.png",4);
     Collision::CreateTextureAndBitmask(character_texture1,"pics/rabbit1.png");
     Collision::CreateTextureAndBitmask(character_texture2,"pics/rabbit1_jumping.png");
     Collision::CreateTextureAndBitmask(character_texture3,"pics/rabbit1_inair.png");
     Collision::CreateTextureAndBitmask(brick_texture,"pics/brick1.png");
-    sCloud.setTexture(cloud_texture);
     scharacter.setTexture(character_texture1);
     sbrick.setTexture(brick_texture);
     sbrick_top.setTexture(brick_texture);
@@ -367,13 +365,9 @@ Game::Game()
         brick[0].y=800-40;
         sbrick_top.setPosition(brick[0].x,brick[0].y);
         background_game_sound.stop();
+        jump=0;
     }
 
-    for(int i = 0; i < SIZE; i++)       /*cloud initialization*/
-    {
-        cloud[i].x = std::rand() % 800;
-        cloud[i].y = std::rand() % 500;
-    }
     //***new game initialization end****
 
     background_game_sound.setVolume(volume*15);
@@ -388,22 +382,27 @@ Game::Game()
     while(life){
         //******poll event*****
         while(gamewindow.pollEvent(event)){
-            if((Keyboard::isKeyPressed(Keyboard::Escape)))
-                {
-                    print_high(highscore);
-                    back_sound.play();
-                    background_game_sound.pause();
-                    return highscore;
-                }
             if(event.type==Event::MouseButtonPressed)       /* Unit testing: finding coordinates */
             {
                 std::cout<< "x pos:"<<event.mouseButton.x<<"y pos:"<<event.mouseButton.y<<std::endl<<std::endl;
             }
-            if(Keyboard::isKeyPressed(Keyboard::Space)&&character_velocity==0&&y+character_length>=ground)  // for detecting jump
+            if(event.type==event.KeyPressed)
+            {
+                if((Keyboard::isKeyPressed(Keyboard::Escape)))
                 {
-                    jump_sound.play();
-                    character_velocity=jump_accelaration;
-                }
+                        print_high(highscore);
+                        back_sound.play();
+                        background_game_sound.pause();
+                        return highscore;
+                    }
+
+                else if(Keyboard::isKeyPressed(Keyboard::Space)&&((character_velocity==0&&y+character_length>=ground)||jump==1))  // for detecting jump
+                    {
+                        jump--;
+                        jump_sound.play();
+                        character_velocity=jump_accelaration;
+                    }
+            }
 
         }
         /*if(Keyboard::isKeyPressed(Keyboard::LShift)&&fuel>3)
@@ -420,6 +419,7 @@ Game::Game()
         //*****handling situation during collision*****
         if(Collision::PixelPerfectTest(scharacter,sbrick_top))
         {
+            if(level>4) jump=2;
             if((((brick[brick_count].y) + 15 )> (y + character_length))&&( 350 > brick[brick_count].x)&&( 350 < (brick[brick_count].x + brick_width)))
             {       //*****new brick is added******
                 if(character_velocity>=0)       //***only when coming down****
@@ -509,6 +509,7 @@ Game::Game()
                     return highscore;
                 }
             }
+
         }
 
         // character gravitation
@@ -537,12 +538,6 @@ Game::Game()
 
         gamewindow.draw(bg);
 
-        // Draws the cloudforms on the screen
-        /*for(int i = 0; i < SIZE; i++){
-            sCloud.setPosition(cloud[i].x, cloud[i].y);
-            gamewindow.draw(sCloud);
-        }
-        */      // temporary disabled
 
         //draws all the bricks
         for(int i=brick_count-1;i>=0;i--)
@@ -608,7 +603,6 @@ MENU::MENU()
         menubg.setTexture(menubgtexture);
         if(!gamename.loadFromFile("fonts/FORTE.ttf")) std::cout<<"Error loading gamename"<<std::endl;
         if(!menuitems.loadFromFile("fonts/MAGNETOB.ttf")) std::cout<<"Error loading menuitems"<<std::endl;
-        if(!style1.loadFromFile("fonts/SitkaI.ttf")) std::cout<<"Error loading style1"<<std::endl; //error loading####
 
         gamename_text.setFont(gamename);
         gamename_text.setString("JUMPING RABBIT");
@@ -887,12 +881,7 @@ int MENU::option_menu(RenderWindow &window)
                     }
         return 0;
 }
-void gen_cloud(){
-    for(int i = 0; i < SIZE; i++){
-        //cloud[i].x = std::rand() % 800;
-        //cloud[i].y = std::rand() % 500;
-    }
-}
+
 
 void Game::scroll()
 {
@@ -998,8 +987,9 @@ void MENU::help_menu(RenderWindow &window)
                     else{
                         if(i==0) help_text.setString("          Press SPACE to jump in game\n Try to land on the center-top of the brick\n                to score higher score");
                         else if(i==1) help_text.setString("Be careful not to get knocked by the bricks");
-                        else if(i==2) help_text.setString("                 Happy Gaming");
-                        else if(i==3) {
+                        else if(i==2) help_text.setString(" You can perform only one airjump \n  while in the air from level 5");
+                        else if(i==3) help_text.setString("                 Happy Gaming");
+                        else if(i==4) {
                             menubgtexture.loadFromFile("pics/menubg1.png");
                             menubg.setTexture(menubgtexture);
                             return;
