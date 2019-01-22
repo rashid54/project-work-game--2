@@ -416,3 +416,162 @@
 	<SFML/Graphics.hpp>
 	<bits/stdc++.h>
 
+1548006419 source:i:\swe\g2\version1.0\main.cpp
+	<SFML/Graphics.hpp>
+	<SFML/Audio.hpp>
+	<bits/stdc++.h>
+	"Collision.hpp"
+	"Collision.cpp"
+
+1511165892 i:\swe\g2\version1.0\collision.hpp
+
+1511165892 i:\swe\g2\version1.0\collision.cpp
+	<SFML/Graphics.hpp>
+	<map>
+	"Collision.hpp"
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio.hpp
+	<SFML/System.hpp>
+	<SFML/Audio/InputSoundFile.hpp>
+	<SFML/Audio/Listener.hpp>
+	<SFML/Audio/Music.hpp>
+	<SFML/Audio/OutputSoundFile.hpp>
+	<SFML/Audio/Sound.hpp>
+	<SFML/Audio/SoundBuffer.hpp>
+	<SFML/Audio/SoundBufferRecorder.hpp>
+	<SFML/Audio/SoundFileFactory.hpp>
+	<SFML/Audio/SoundFileReader.hpp>
+	<SFML/Audio/SoundFileWriter.hpp>
+	<SFML/Audio/SoundRecorder.hpp>
+	<SFML/Audio/SoundSource.hpp>
+	<SFML/Audio/SoundStream.hpp>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\inputsoundfile.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/System/NonCopyable.hpp>
+	<SFML/System/Time.hpp>
+	<string>
+	<algorithm>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\export.hpp
+	<SFML/Config.hpp>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\listener.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/System/Vector3.hpp>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\music.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/Audio/SoundStream.hpp>
+	<SFML/Audio/InputSoundFile.hpp>
+	<SFML/System/Mutex.hpp>
+	<SFML/System/Time.hpp>
+	<string>
+	<vector>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundstream.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/Audio/SoundSource.hpp>
+	<SFML/System/Thread.hpp>
+	<SFML/System/Time.hpp>
+	<SFML/System/Mutex.hpp>
+	<cstdlib>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundsource.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/Audio/AlResource.hpp>
+	<SFML/System/Vector3.hpp>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\alresource.hpp
+	<SFML/Audio/Export.hpp>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\outputsoundfile.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/System/NonCopyable.hpp>
+	<string>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\sound.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/Audio/SoundSource.hpp>
+	<SFML/System/Time.hpp>
+	<cstdlib>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundbuffer.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/Audio/AlResource.hpp>
+	<SFML/System/Time.hpp>
+	<string>
+	<vector>
+	<set>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundbufferrecorder.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/Audio/SoundBuffer.hpp>
+	<SFML/Audio/SoundRecorder.hpp>
+	<vector>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundrecorder.hpp
+	<SFML/Audio/Export.hpp>
+	<SFML/Audio/AlResource.hpp>
+	<SFML/System/Thread.hpp>
+	<SFML/System/Time.hpp>
+	<vector>
+	<string>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundfilefactory.hpp
+	<SFML/Audio/Export.hpp>
+	<string>
+	<vector>
+	<SFML/Audio/SoundFileFactory.inl>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundfilefactory.inl
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundfilereader.hpp
+	<SFML/Audio/Export.hpp>
+	<string>
+
+1525812018 f:\installed\sfml-2.5.0-windows-gcc-5.1.0-tdm-32-bit\sfml-2.5.0\include\sfml\audio\soundfilewriter.hpp
+	<SFML/Audio/Export.hpp>
+	<string>
+
+1548126293 source:i:\swe\g2\jumping rabbit\version1.0\main.cpp
+	<SFML/Graphics.hpp>
+	<SFML/Audio.hpp>
+	<bits/stdc++.h>
+	<sys/stat.h>
+	"Collision.hpp"
+	"Collision.cpp"
+	"scorer.cpp"
+
+1511165892 i:\swe\g2\jumping rabbit\version1.0\collision.hpp
+
+1511165892 i:\swe\g2\jumping rabbit\version1.0\collision.cpp
+	<SFML/Graphics.hpp>
+	<map>
+	"Collision.hpp"
+
+1548126293 i:\swe\g2\jumping rabbit\version1.0\scorer.cpp
+	<SFML/Graphics.hpp>
+	<SFML/Audio.hpp>
+	<bits/stdc++.h>
+
+1548126293 source:i:\swe\g2\jumping rabbit\version1.0\scorer.cpp
+	<SFML/Graphics.hpp>
+	<SFML/Audio.hpp>
+	<bits/stdc++.h>
+
+1548127116 source:c:\users\lenovo_\desktop\project 2\main.cpp
+	<SFML/Graphics.hpp>
+	<SFML/Audio.hpp>
+	<bits/stdc++.h>
+	<sys/stat.h>
+	"Collision.hpp"
+	"Collision.cpp"
+
+1548127106 c:\users\lenovo_\desktop\project 2\collision.hpp
+
+1548127108 c:\users\lenovo_\desktop\project 2\collision.cpp
+	<SFML/Graphics.hpp>
+	<map>
+	"Collision.hpp"
+
