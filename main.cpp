@@ -343,6 +343,7 @@ public:
         exit_sound.setVolume(sound_level*15);
         invalid_sound.setVolume(sound_level*15);
         sound_change.setVolume(sound_level*15);
+        high=0;
     }
 
 };
