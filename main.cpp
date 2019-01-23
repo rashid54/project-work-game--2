@@ -241,6 +241,18 @@ class Game
             character_velocity = 0,brick_velocity=(game_speed)*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
             sbrick_top.setPosition(brick[0].x,brick[0].y);
             cloud.load();
+            if(level<20)
+            {
+                brick_texture.loadFromFile("pics/brick2.png");
+                sbrick.setTexture(brick_texture);
+                sbrick_top.setTexture(brick_texture);
+            }
+            else if(level<30)
+            {
+                brick_texture.loadFromFile("pics/brick3.png");
+                sbrick.setTexture(brick_texture);
+                sbrick_top.setTexture(brick_texture);
+            }
     }
     void scroll();
 public:
@@ -383,7 +395,7 @@ Game::Game()
     Collision::CreateTextureAndBitmask(character_texture1,"pics/rabbit1.png");
     Collision::CreateTextureAndBitmask(character_texture2,"pics/rabbit1_jumping.png");
     Collision::CreateTextureAndBitmask(character_texture3,"pics/rabbit1_inair.png");
-    Collision::CreateTextureAndBitmask(brick_texture,"pics/brick1.png");
+    Collision::CreateTextureAndBitmask(brick_texture,"pics/brick2.png");
     scharacter.setTexture(character_texture1);
     sbrick.setTexture(brick_texture);
     sbrick_top.setTexture(brick_texture);
@@ -430,6 +442,9 @@ Game::Game()
         bgsource.top=bg_length-900,bgsource.left=0,bgsource.width=700,bgsource.height=bg_length;
         bg.setTexture(bgimage_texture);
         bg.setTextureRect(bgsource);
+        brick_texture.loadFromFile("pics/brick1.png");
+        sbrick.setTexture(brick_texture);
+        sbrick_top.setTexture(brick_texture);
 
         brick_count=0,x = 250, y = 100,speed=4,fuel=100,level=1,mapnum=0,highscore=high,level_score=0,jack=0,life=3,score=0;
         sprintf(text,"%d",level);
@@ -532,30 +547,33 @@ Game::Game()
                             level_text.setString(text);
                             jack=-80;
                             sidewindow.set_pic(2);
-                            if(level==5)
+                            if(level==10)
                             {
                                 score+=(life*50);
                                 life++;
                                 life_ani.set_pic(5-life);
                                 map_changer(gamewindow,"pics/background2.png");
                             }
-                            else if(level==10)
+                            else if(level==20)
                             {
                                 score+=(life*50);
                                 life++;
                                 life_ani.set_pic(5-life);
                                 map_changer(gamewindow,"pics/background3.png");
                             }
-                            else if(level==15)
+                            else if(level==30)
                             {
                                 score+=(life*50);
                                 Text winner;
                                 winner.setFont(values);
                                 winner.setPosition(-400,400);
-                                winner.setCharacterSize(60);
-                                winner.setString("   Congratulations!!!\nEntering Free Mode");
+                                winner.setCharacterSize(40);
+                                winner.setString("      Congratulations!!!\nYou've visited all the maps\n   Entering Free Mode");
                                 for(int i=0;i<400;i++)
                                 {
+                                    if(i==150) level_up_sound.play();
+                                    else if(i==300) level_up_sound.play();
+                                    else if(i==400) level_up_sound.play();
                                     winner.move(3,0);
                                     gamewindow.draw(bg);
 
