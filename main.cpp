@@ -223,7 +223,7 @@ class Game
                 gamewindow.display();
                 gamewindow.clear(sf::Color::Cyan);
             }
-            speed-=1;
+            speed-=3;
             bgimage_texture.loadFromFile(arg);
             bg.setTexture(bgimage_texture);
             y=100;
