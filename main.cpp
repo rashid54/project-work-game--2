@@ -20,6 +20,7 @@
 #define top_ground 540
 #define max_brick 200
 #define game_speed (1+(0.1*speed))
+#define brick_speed (1+(0.17*speed))
 #define ground brick[brick_count].y+55
 using namespace sf;
 //***********structures***********
@@ -30,6 +31,90 @@ inline bool file_exists (const std::string& name) {
   return (stat (name.c_str(), &buffer) == 0);
 }
 
+class CLOUD
+{
+    int z;
+    coordinate pos[10];
+    int velocity[10];
+    Texture cloud_texture;
+public:
+    Sprite scloud[10];
+    void load()
+    {
+        std::srand(time(NULL));
+        int v=rand()%3;
+        z=-(rand()%2);
+        cloud_texture.loadFromFile("pics/cloud1.png");
+        for(int cx,cy,c,i=0;i<10;i++)
+        {
+            c=rand();
+            cy=(c%700)-400;
+            cx=(c%800)-100;
+            scloud[i].setTexture(cloud_texture);
+            velocity[i]=(z*v)+1;
+            pos[i].x=cx;
+            pos[i].y=cy;
+            scloud[i].setPosition(cx,cy);
+        }
+    }
+    void cloud_move()
+    {
+        int v=rand()%3;
+        for(int c,cx,cy,i=0;i<10;i++)
+        {
+            pos[i].x+=velocity[i];
+            scloud[i].move(velocity[i],0);
+
+            if((pos[i].x<-200||pos[i].x>900))
+            {
+                c=rand();
+                cy=(c%400)-500;
+                cx=(c%800)-100;
+                velocity[i]=(z*v)+1;
+                pos[i].x=cx;
+                pos[i].y=cy;
+                scloud[i].setPosition(cx,cy);
+            }
+        }
+    }
+    void cloud_scroll()
+    {
+        int v=rand()%3;
+        for(int c,cx,cy,i=0;i<10;i++)
+        {
+            pos[i].y+=3;
+            scloud[i].move(0,3);
+
+            if(pos[i].y>1000||pos[i].y<-400)
+            {
+                c=rand();
+                cy=(c%400)-500;
+                cx=(c%800)-100;
+                velocity[i]=(z*v)+1;
+                pos[i].x=cx;
+                pos[i].y=cy;
+                scloud[i].setPosition(cx,cy);
+            }
+        }
+    }
+    void cloud_create()
+    {
+        int v=rand()%3;
+        for(int c,cx,cy,i=0;i<10;i++)
+        {
+            if((pos[i].x<-200||pos[i].x>900)||pos[i].y>1000)
+            {
+                c=rand();
+                cy=(c%700)-400;
+                cx=(c%800)-100;
+                velocity[i]=(z*v)+1;
+                pos[i].x=cx;
+                pos[i].y=cy;
+                scloud[i].setPosition(cx,cy);
+            }
+        }
+    }
+};
 class animation
 {
     Texture texture;
@@ -67,6 +152,7 @@ public:
 };
 class Game
 {
+    CLOUD cloud;
     int brick_count,x , y ,speed,score,fuel,level,mapnum,highscore,level_score,jack,life;
     int jump;
     char text[10];
@@ -137,7 +223,7 @@ class Game
                 gamewindow.display();
                 gamewindow.clear(sf::Color::Cyan);
             }
-            speed-=3;
+            speed-=1;
             bgimage_texture.loadFromFile(arg);
             bg.setTexture(bgimage_texture);
             y=100;
@@ -154,6 +240,7 @@ class Game
             bg.setTextureRect(bgsource);
             character_velocity = 0,brick_velocity=(game_speed)*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
             sbrick_top.setPosition(brick[0].x,brick[0].y);
+            cloud.load();
     }
     void scroll();
 public:
@@ -338,6 +425,7 @@ Game::Game()
     //***new game initialization start****
     if(DEAD==true)
     {
+        cloud.load();
         bgimage_texture.loadFromFile("pics/background1.png");
         bgsource.top=bg_length-900,bgsource.left=0,bgsource.width=700,bgsource.height=bg_length;
         bg.setTexture(bgimage_texture);
@@ -354,7 +442,7 @@ Game::Game()
         bg.setTextureRect(bgsource);
         life_ani.set_pic(2);
 
-        character_velocity = 0,brick_velocity=game_speed*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
+        character_velocity = 0,brick_velocity=brick_speed*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
         DEAD=false;
 
         for(int i=0;i<max_brick;i++)        /* brick initialization */
@@ -419,7 +507,7 @@ Game::Game()
         //*****handling situation during collision*****
         if(Collision::PixelPerfectTest(scharacter,sbrick_top))
         {
-            if(level>4) jump=2;
+            if(level>1) jump=2;
             if((((brick[brick_count].y) + 15 )> (y + character_length))&&( 350 > brick[brick_count].x)&&( 350 < (brick[brick_count].x + brick_width)))
             {       //*****new brick is added******
                 if(character_velocity>=0)       //***only when coming down****
@@ -444,23 +532,69 @@ Game::Game()
                             level_text.setString(text);
                             jack=-80;
                             sidewindow.set_pic(2);
-                            if(level==8)
+                            if(level==5)
                             {
+                                score+=(life*50);
                                 life++;
                                 life_ani.set_pic(5-life);
                                 map_changer(gamewindow,"pics/background2.png");
                             }
-                            else if(level==15)
+                            else if(level==10)
                             {
+                                score+=(life*50);
                                 life++;
                                 life_ani.set_pic(5-life);
                                 map_changer(gamewindow,"pics/background3.png");
+                            }
+                            else if(level==15)
+                            {
+                                score+=(life*50);
+                                Text winner;
+                                winner.setFont(values);
+                                winner.setPosition(-400,400);
+                                winner.setCharacterSize(60);
+                                winner.setString("   Congratulations!!!\nEntering Free Mode");
+                                for(int i=0;i<400;i++)
+                                {
+                                    winner.move(3,0);
+                                    gamewindow.draw(bg);
+
+                                    for(int i=0;i<10;i++)
+                                    {
+                                        gamewindow.draw(cloud.scloud[i]);
+                                    }
+
+                                    //draws all the bricks
+                                    for(int i=brick_count-1;i>=0;i--)
+                                    {
+                                        sbrick.setPosition(brick[i].x,brick[i].y);
+                                        gamewindow.draw(sbrick);
+                                        if(brick[i].y>900) break;
+                                    }
+                                    gamewindow.draw(sbrick_top);
+                                    if(character_velocity==0) scharacter.setTexture(character_texture1);
+                                    else if( character_velocity<0) scharacter.setTexture(character_texture2);
+                                    else if(character_velocity>0) scharacter.setTexture(character_texture3);
+                                    gamewindow.draw(scharacter);
+                                    jack++;
+                                    if(jack==120){ jack=0;sidewindow.set_pic(0);}
+                                    else if(jack==60) sidewindow.set_pic((1));
+                                    gamewindow.draw(sidewindow.print());
+                                    gamewindow.draw(life_ani.print());
+                                    gamewindow.draw(score_text);
+                                    gamewindow.draw(highscore_text);
+                                    gamewindow.draw(level_text);
+                                    gamewindow.draw(winner);
+                                    gamewindow.display();
+                                    gamewindow.clear(sf::Color::Cyan);
+
+                                }
                             }
                     }
                     if(level_score>35){
                             speed++;
                             level_score=0;
-                            character_velocity = 0,brick_velocity=game_speed*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
+                            character_velocity = 0,brick_velocity=brick_speed*2.5,gravitation=game_speed*0.25,jump_accelaration=-12;
                     }
                     std::cout<<"score:"<<score<<" level:"<<level<<" speed:"<<speed<<" mapnum:"<<mapnum<<std::endl;
                 }
@@ -514,7 +648,11 @@ Game::Game()
 
         // character gravitation
         if((y+character_length)>ground&& character_velocity>=0)//***when above ground and downward accelaration*****
-            character_velocity=0;                               // ****the character is stationary******
+            {
+                character_velocity=0;                               // ****the character is stationary******
+                if(level>1) jump=2;
+            }
+        else if(character_velocity>12) character_velocity=12;
         else character_velocity += gravitation;             //***continuous gravitational accelaration *****
 
         scharacter.move(0,character_velocity);
@@ -531,13 +669,19 @@ Game::Game()
         if(ground < top_ground)
         {
             scroll();
+            cloud.cloud_scroll();
         }
+        cloud.cloud_move();
         //std::cout<<ground<<std::endl<<y<<std::endl;
 
         //*****start of drawing*****
 
         gamewindow.draw(bg);
 
+        for(int i=0;i<10;i++)
+        {
+            gamewindow.draw(cloud.scloud[i]);
+        }
 
         //draws all the bricks
         for(int i=brick_count-1;i>=0;i--)
@@ -987,7 +1131,7 @@ void MENU::help_menu(RenderWindow &window)
                     else{
                         if(i==0) help_text.setString("          Press SPACE to jump in game\n Try to land on the center-top of the brick\n                to score higher score");
                         else if(i==1) help_text.setString("Be careful not to get knocked by the bricks");
-                        else if(i==2) help_text.setString(" You can perform only one airjump \n  while in the air from level 5");
+                        else if(i==2) help_text.setString(" You can perform only one airjump \n  while in the air from level 2");
                         else if(i==3) help_text.setString("                 Happy Gaming");
                         else if(i==4) {
                             menubgtexture.loadFromFile("pics/menubg1.png");

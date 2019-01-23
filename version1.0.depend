@@ -574,3 +574,18 @@
 	<map>
 	"Collision.hpp"
 
+1548207404 source:i:\swe\g2\jumping rabbit\ready3\main.cpp
+	<SFML/Graphics.hpp>
+	<SFML/Audio.hpp>
+	<bits/stdc++.h>
+	<sys/stat.h>
+	"Collision.hpp"
+	"Collision.cpp"
+
+1548206735 i:\swe\g2\jumping rabbit\ready3\collision.hpp
+
+1548206735 i:\swe\g2\jumping rabbit\ready3\collision.cpp
+	<SFML/Graphics.hpp>
+	<map>
+	"Collision.hpp"
+
